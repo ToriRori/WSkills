@@ -4,90 +4,92 @@ import java.io.*;
 import java.util.*;
 
 public class Solver {
+    int n;
+    double[][] matrix;
 
-    static double[][] matrix = new double[3][3];
-
-    public static double[][] getMatrix(){
-        double[][] matrix = new double[2][2];
-        matrix[0][0] = 1;
-        matrix[0][1] = -1;
-        matrix[1][0] = 2;
-        matrix[1][1] = 1;
-        return matrix;
+    public Solver(double [][] matrix, int n)
+    {
+        this.n = n;
+        this.matrix = new double[n][n];
+        this.matrix = matrix;
     }
 
     public static void main(String[] args)
     {
-        matrix = getMatrix();
-        int n = matrix[0].length;
-        double[] F = new double[n];
+
+        double [][] matrix = new double[2][2];
+        matrix[0][0] = 1;
+        matrix[0][1] = -1;
+        matrix[1][0] = 2;
+        matrix[1][1] = 1;
+        Solver Sol = new Solver(matrix, 2);
+        double[] F = new double[2];
         F[0] = -5;
         F[1] = -7;
-        double[] Res = new double[n];
-        Res = getSolve(F);
-        for (int i = 0; i < n; i++)
+        double[] Res = new double[Sol.n];
+        Res = Sol.getSolve(F);
+        for (int i = 0; i < Sol.n; i++)
             System.out.println(Res[i]);
     }
 
-    public static double[] getSolve(double[] F)
+    public double[] getSolve(double[] F)
     {
-        int n = F.length;
-        for (int k = 0; k < n; k++)
+        for (int k = 0; k < this.n; k++)
         {
             int temp = k;
-            while (matrix[temp][k] == 0)
+            while (this.matrix[temp][k] == 0)
             {
                 temp++;
-                if (k == n-1)
+                if (k == this.n-1)
                 {
                     System.out.println("ERR");
                     System.exit(0);
                 }
-                if (temp == n)
+                if (temp == this.n)
                 {
                     k++;
                     temp = k;
                 }
             }
-            double[] teq = new double[n];
-            teq = matrix[k];
-            matrix[k] = matrix[temp];
-            matrix[temp] = teq;
+            double[] teq = new double[this.n];
+            teq = this.matrix[k];
+            this.matrix[k] = this.matrix[temp];
+            this.matrix[temp] = teq;
             double tF = F[k];
             F[k] = F[temp];
             F[temp] = tF;
 
-            for (int i = k+1; i < n; i++)
+            for (int i = k+1; i < this.n; i++)
             {
-                double temp1 = matrix[i][k];
-                for (int j = 0; j < n; j++)
+                double temp1 = this.matrix[i][k];
+                for (int j = 0; j < this.n; j++)
                 {
-                    matrix[i][j] = matrix[i][j] - matrix[k][j]*temp1/matrix[k][k];
+                    this.matrix[i][j] = this.matrix[i][j] - this.matrix[k][j]*temp1/this.matrix[k][k];
                 }
-                F[i] = F[i] - F[k]*temp1/matrix[k][k];
+                F[i] = F[i] - F[k]*temp1/this.matrix[k][k];
             }
-            double temp1 = matrix[k][k];
-            for (int i = 0; i < n; i++)
+            double temp1 = this.matrix[k][k];
+            for (int i = 0; i < this.n; i++)
             {
-                matrix[k][i] = matrix[k][i] / temp1;
+                this.matrix[k][i] = this.matrix[k][i] / temp1;
             }
             F[k] = F[k]/temp1;
         }
-        for (int k = n - 1; k >= 0; k--)
+        for (int k = this.n - 1; k >= 0; k--)
         {
             for (int i = k-1; i >= 0; i--)
             {
-                double temp = matrix[i][k];
-                for (int j = 0; j < n; j++)
+                double temp = this.matrix[i][k];
+                for (int j = 0; j < this.n; j++)
                 {
-                    matrix[i][j] = matrix[i][j] - matrix[k][j]*temp/matrix[k][k];
+                    this.matrix[i][j] = this.matrix[i][j] - this.matrix[k][j]*temp/this.matrix[k][k];
                 }
-                F[i] = F[i] - F[k]*temp/matrix[k][k];
+                F[i] = F[i] - F[k]*temp/this.matrix[k][k];
             }
-            double temp = matrix[k][k];
-            for (int i = 0; i < n; i++)
+            double temp = this.matrix[k][k];
+            for (int i = 0; i < this.n; i++)
             {
-                matrix[k][i] = matrix[k][i] / temp;
+                this.matrix[k][i] = this.matrix[k][i] / temp;
             }
             F[k] = F[k]/temp;
         }
